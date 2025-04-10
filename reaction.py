@@ -7,8 +7,14 @@ led = LED(4)
 right_button = Button(15)
 left_button = Button(14)
 
+left_name = input('Left player name is: ')
+right_name = input('Right player name is: ')
+
 def pressed(button):
-    print(str(button.pin.number) + ' won the game')
+    if button.pin.number == 14:
+        print(left_name + ' won the game')
+    else:
+        print(right_name + ' won the game')
 
 right_button.when_pressed = pressed
 left_button.when_pressed = pressed
