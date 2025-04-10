@@ -15,6 +15,7 @@ def pressed(button):
         print(left_name + ' won the game')
     else:
         print(right_name + ' won the game')
+    exit()
 
 right_button.when_pressed = pressed
 left_button.when_pressed = pressed
