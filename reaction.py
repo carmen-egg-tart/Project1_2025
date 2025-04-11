@@ -6,8 +6,8 @@ from random import uniform
 led = LED(4)
 
 # Set up buttons on GPIO pins 15 (right) and 14 (left)
-right_button = Button(15, bounce_time=0.1)  # Add bounce_time to debounce the button
-left_button = Button(14, bounce_time=0.1)   # Add bounce_time to debounce the button
+right_button = Button(15)
+left_button = Button(14)
 
 # Get player names
 left_name = input('Left player name is: ')
@@ -20,26 +20,23 @@ right_score = 0
 # Flag to ensure only one button press is processed per round
 button_pressed = False
 
-# Variable to store the start time of the reaction
-reaction_start_time = None
+# Number of rounds
+max_rounds = 5
+rounds = 0
 
 # Function to handle button presses
 def pressed(button):
     global reaction_start_time, left_score, right_score, button_pressed
-    if reaction_start_time is not None and not button_pressed:  # Ensure only one press is processed
+    if reaction_start_time is not None and not button_pressed:
         reaction_time = time() - reaction_start_time
         if button.pin.number == 14:
-            print(f"{left_name} won the game in {reaction_time:.2f} seconds")
+            print(f"{left_name} pressed the button in {reaction_time:.2f} seconds")
             left_score += 1
         else:
-            print(f"{right_name} won the game in {reaction_time:.2f} seconds")
+            print(f"{right_name} pressed the button in {reaction_time:.2f} seconds")
             right_score += 1
-        reaction_start_time = None  # Reset reaction start time after processing
-        button_pressed = True  # Mark that a button has been pressed
-
-# Number of rounds
-max_rounds = 5
-rounds = 0
+        reaction_start_time = None
+        button_pressed = True
 
 while rounds < max_rounds:
     # Reset button_pressed flag at the start of each round
@@ -61,8 +58,10 @@ while rounds < max_rounds:
     right_button.when_pressed = pressed
     left_button.when_pressed = pressed
 
-    # Wait for a short period to allow players to press the button
-    sleep(2)
+    # Wait for 2 seconds to allow players to press the button
+    end_time = time() + 2
+    while time() < end_time:
+        pass  # Busy-wait instead of blocking the main thread
 
     # Reset button press handlers after each round
     right_button.when_pressed = None
